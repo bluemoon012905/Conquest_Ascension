@@ -6,7 +6,8 @@ module.exports = {
   entry: './client/src/index.js',
   output: {
     path: path.resolve(__dirname, 'docs'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/Conquest_Ascension/'
   },
   module: {
     rules: [
