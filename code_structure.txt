@@ -1,0 +1,62 @@
+/ (root)
+|-- client/ (Frontend - React)
+|   |-- public/
+|   |   |-- index.html
+|   |   |-- assets/
+|   |       |-- images/
+|   |       |-- styles/
+|   |           |-- main.css
+|   |-- src/
+|       |-- components/
+|       |   |-- board/
+|       |   |   |-- Board.js
+|       |   |   |-- Square.js
+|       |   |   |-- Piece.js
+|       |   |-- ui/
+|       |   |   |-- Button.js
+|       |   |   |-- InfoPanel.js
+|       |   |   |-- Modal.js
+|       |   |   |-- Map.js
+|       |-- views/
+|       |   |-- MainMenu.js
+|       |   |-- LevelSelection.js
+|       |   |-- GameView.js
+|       |   |-- ShopView.js
+|       |   |-- BarracksView.js
+|       |-- game/
+|       |   |-- Game.js (main game logic)
+|       |   |-- state.js (game state management)
+|       |   |-- modes/
+|       |   |   |-- Tutorial.js
+|       |   |   |-- Campaign.js
+|       |   |   |-- Ascension.js
+|       |   |   |-- Versus.js
+|       |-- App.js
+|       |-- index.js
+|-- server/ (Backend - Node.js with Express/Socket.io)
+|   |-- src/
+|       |-- game/
+|       |   |-- Game.js
+|       |   |-- Player.js
+|       |   |-- Piece.js
+|       |   |-- Equipment.js
+|       |   |-- Behavior.js
+|       |   |-- Enemy.js
+|       |-- core/
+|       |   |-- GameLoop.js
+|       |   |-- SocketHandler.js
+|       |-- models/ (if a database is used in the future)
+|       |-- routes/
+|       |   |-- api.js
+|       |-- server.js
+|-- shared/ (Code to be shared between frontend and backend)
+|   |-- game-rules/
+|   |   |-- pieces.js
+|   |   |-- equipments.js
+|   |   |-- behaviors.js
+|   |-- utils/
+|-- scripts/
+|   |-- build.js
+|   |-- deploy.js
+|-- package.json
+|-- README.md

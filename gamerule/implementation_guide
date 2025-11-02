@@ -1,0 +1,37 @@
+The player should be able to do the following: 
+
+have a opening menu, where they can click start game
+- this way we can add more features in the future
+
+have a level selection, there should be 4 button: 
+- tutorial (which will be implemented first)
+- campaign (pre written levels, which will be implemented second) 
+- ascension (the main way to play the game, which will be the final product)
+- Vs a friend, where the player can either join a room or create a room. this will be used for 1v1, (this will be added somewhere along the production)
+
+In tutorial: 
+- the character is picked for the player, which is chess. there will be instructions on how to play. 
+
+In campaign, the player can pick a campaign which will have the pre made levels with choosen character and map
+
+In ascension, the player can pick a character (ie, chess, shogi, xiangqi, etc) and a map will be generated
+
+In an enemy level: 
+    - the player have a branching of rooms, where it branches out and back into one at the boss. 
+    - each room the enemy will roll a number, and their roll will be up to the enemy type that they are. 
+    - The player get their 1 minimal move + the move they roll to drop pieces into formation. 
+    - the player will have a preview on the enemy formation. 
+
+In an blacksmith level: 
+    - the player can buy/sell equipements
+    - there will also be currency dropped from enemies
+    - They can change the equipments on their units
+
+In an supply site: 
+    - the player can buy/exchange different troops
+    - the player can change equipments on their units
+    - the player can recover an amount of captures
+
+In a boss level: 
+    - the player should encounter a boss
+

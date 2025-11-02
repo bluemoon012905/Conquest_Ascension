@@ -1,0 +1,17 @@
+The pieces carries: 
+    HP
+    equipment
+        - armor
+        - additional hp
+        - behaviors
+            - movement
+            - capture/action
+        - values
+            - A
+            - B
+            - C
+    appearance
+
+Pieces: (small list for early version)
+    shogi soldier
+    

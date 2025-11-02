@@ -1,0 +1,32 @@
+equipment carries the data, and provides the behavior that pieces and enemy uses.
+(the enemy might reference through pieces)
+
+Here are abstraction categories: 
+
+
+**Chess-likes: 
+
+    capture(basic) - captures on the square that the piece occupies
+
+    Chess: 
+        oct-movement
+        cross-movement (rook)
+        diagonal-movement (bishop) 
+        knight-movement (knight)
+
+        pawn capture - forward two diagonal capture
+
+        more to be added...
+
+    Xiangqi
+        cannon capture - 
+        more to be added...
+    Shogi
+        keima capture - forward two knight move
+        more to be added...
+
+**In-game unique
+    captures: 
+        saber - diagonal one space capture 
+        sword - horizontal one space capture 
+        spear - horizontal two space capture 

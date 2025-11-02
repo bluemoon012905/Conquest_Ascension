@@ -1,0 +1,68 @@
+Create the project like the structure provided. 
+
+the structure itself should be around, for the frist version we will only be filling in the following: 
+
+the start game button should work
+
+put in the three main button, but they don't have to work for now. 
+
+create a temperary demo button as well, this is where we will test some of the earliest features. 
+
+have this be a 8x8 board
+
+we will add: 
+    equipment: 
+        movement:
+        oct-movement. this is in all 8 direction for one square 
+        This will cost 3A
+        cross-movement. this is in 4 direction for one square. 
+        This will cost 2A
+        diagonal-movement. this is in 4 direction (diagonally) for one square. 
+        This will cost 2A
+
+        capture: 
+        lightswing-down. this is where the location that the piece occupies is attack. the damage will be 2 + 1d4
+        this will cost 1b
+        hardswing-down.  this is where the location that the piece occupies is attack.the damage will be 3 + 1d6
+        this will cost 2b
+
+        armor: 
+        lightarmor. this adds 1d4 defense. cost 1c
+        heavyarmor. this adds 1d4 + 1d6 defesne. cost 2c and 1a
+
+    pieces: 
+        Vanguard - can spend 6A 2b, has 20 HP
+        horseman - can spend 8A 1b, has 15 HP
+        Shieldman - can spend 3A 1b 2c, has 25 HP
+
+in the demo board, you can drop the piece as player blue or player red. these two are enemies. 
+I should be able to pick a piece, put the capture, movement, and armor on them as under their limitation. 
+Equipments should stack. for example, two oct-movment would allow the player to move two times in all 8 directions. multiple captures would allow me to capture multiple times. 
+
+visually, the movement can just be rectangles with words on them for now. I should be able to drag and drop them on the pieces like cards. 
+the capture would be hexagons
+the armor would be in a little shield shape. 
+the pieces can just be blue/red circles with the name of the piece written on them. 
+
+
+after the player has set up the board, I should be able to press a button and start a game after I choose in an option on which player to go first. 
+
+when I click on the pieces, I should be able to see movement options, which should mark on the board as blue
+I should see attack options as red. 
+if there is an overlap, you should make the tile marked purple. when a purple is selected, a prompt should pop up for the player to choose which action to take. 
+within each piece itself, in each turn, it should store the data. I should have an undo button for each piece individually. 
+I want a button that submits the moves, which will then pass on the turn. 
+
+when an attack land on a piece, the armor value and the attack value both rolls. if attack is larger than defense, the piece takes damage and updates the health bar
+there should be health bar above the piece, having the current health count and the full health. should be like 15/20
+
+a piece is removed from the board if the piece is at/below 0 health
+
+when all pieces are captured from one player, the game ends with the standing player wining. when a game ends I should have a button that kicks me back to the demo board, or the main menu. 
+
+I should also be able to quit midway in playing, which will kick me back to the demo board set up. 
+
+I can play for both player, I will only be able to play the side that is current the turn of. 
+
+the damage should display in big fonts, displaying the damage dealt and damage blocked. 
+

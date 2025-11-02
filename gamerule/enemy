@@ -1,0 +1,27 @@
+enemies are composed of different behavior types of encounters. 
+The enemies carry the pieces that makes up the enemy, and categorized under behaviors
+ideally, the difficulty goes up as behavior become smarter/more complicated
+
+Violence: 
+(naturally has average initiative roll)
+    Cavalry charge
+    infantry march
+    Formation fighting
+        
+finesse: 
+(naturally has higher initiative roll)
+    archery ambush 
+    hunting natives
+    cavalry archer ambush
+    Light cavalry charge
+
+Defensive: 
+(naturally has lower initiative roll)
+    resting camp
+    artillery holdout
+    fortress
+
+Bosses: 
+    - act 1
+    - act 2
+    - act 3

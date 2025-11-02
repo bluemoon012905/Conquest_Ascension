@@ -1,0 +1,54 @@
+Game flow: 
+
+base rule: 
+    pieces can co-exist on the same square
+    you move from room to room. beginning of each room you place down your pieces. 
+    each piece that weren't captured can be placed down in move 0, and the player can spend a move dropping a piece
+    the amount of moves the player has is up to the initiative roll. player has base 1 move, and could get more as an upgrade. 
+    each number of an initiative roll means one more move for the player
+
+modes: 
+    tutorial
+    pre-written campaigns 
+    ascension (randomly generated paths)
+
+map: 
+    the player traverse from board to board.
+    There are different events that a play can encounter throughout the map, just like a roguelike: 
+        - a place to change equipment on your troops
+        - a place to shop (pieces and equipment)
+        - enemy
+            - small enemy, average difficulty
+            - mini bosses, medium difficulty
+            - ascension bosses, hard difficulty
+        - there will be three acts, each act having a number of small enemies
+        - 2-3 mini bosses per act
+        - 1 ascension boss, at the end of each act
+        - final ascension boss of the final act should be very hard. 
+
+interaction: 
+    there must be initiatives 
+    before each round (acting like a room in normal rogue like), player roll initiative for how many moves they get to set up the piece locations. 
+
+
+equipment: 
+    pieces will have two values: 
+        unit A (placeholder) - movement balance 
+        unit B (placeholder) - attack/action
+        unit C (placeholder) - armor/shield 
+    equipment will match that, such as an equipment that give silver general movement would have
+    5 A, 0B and 0C
+
+    All chess piece would have 1B for capturing right under
+
+    additional capturing without moving on top of will be saved as patterns centering around the piece. 
+
+    different types of action will exist, in addition to capturing, there will be 
+
+pieces: 
+    pieces will carry the value of equipment slots. 
+    pieces will carry their hit points
+
+King: 
+    special piece, inherits all behavior from pieces
+    game is lost if king is captured 
