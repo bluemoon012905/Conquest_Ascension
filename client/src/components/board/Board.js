@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Square from './Square';
 import './Board.css';
 
@@ -13,6 +13,7 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
       return;
     }
     setSelectedPiece(piece);
+
     // Dummy data for possible moves
     const moves = [];
     for (let i = 1; i < 3; i++) {
@@ -35,64 +36,84 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
       return;
     }
 
-    const isPossibleMove = possibleMoves.some(move => move.x === to.x && move.y === to.y);
-    const isPossibleAttack = possibleAttacks.some(attack => attack.x === to.x && attack.y === to.y);
+    const isPossibleMove = possibleMoves.some(
+      (move) => move.x === to.x && move.y === to.y
+    );
+    const isPossibleAttack = possibleAttacks.some(
+      (attack) => attack.x === to.x && attack.y === to.y
+    );
 
     if (isPossibleMove && isPossibleAttack) {
       if (window.confirm('Attack?')) {
-        // Attack
         console.log('Attacking!');
       } else {
-        // Move
         console.log('Moving!');
       }
     } else if (isPossibleAttack) {
-      // Attack
       console.log('Attacking!');
     } else if (isPossibleMove) {
-      // Move
       console.log('Moving!');
     }
 
+    // save current board to history
     setHistory([...history, pieces]);
 
     const targetPiece = pieces[`${to.x},${to.y}`];
+
+    // COMBAT BRANCH
     if (targetPiece && targetPiece.player !== item.player) {
       console.log('Combat!');
-      setPieces(prevPieces => {
+      setPieces((prevPieces) => {
         const newPieces = { ...prevPieces };
         const defender = newPieces[`${to.x},${to.y}`];
-        defender.health -= 1;
-        if (defender.health <= 0) {
-          delete newPieces[`${to.x},${to.y}`];
+
+        if (defender) {
+          defender.health -= 1;
+          if (defender.health <= 0) {
+            delete newPieces[`${to.x},${to.y}`];
+          }
         }
 
-        const remainingOpponentPieces = Object.values(newPieces).filter(p => p.player !== currentPlayer);
+        const remainingOpponentPieces = Object.values(newPieces).filter(
+          (p) => p.player !== currentPlayer
+        );
         if (remainingOpponentPieces.length === 0) {
           setWinner(currentPlayer);
         }
 
         return newPieces;
       });
+
+      // after combat we’re done
+      setSelectedPiece(null);
+      setPossibleMoves([]);
+      setPossibleAttacks([]);
       return;
     }
-      const pieceToMove = Object.values(newPieces).find(p => p.id === item.id);
+
+    // NON-COMBAT MOVE / PLACE BRANCH
+    setPieces((prevPieces) => {
+      const newPieces = { ...prevPieces };
+
+      // find the piece we’re moving (it should already be on the board)
+      const pieceToMove = Object.values(newPieces).find((p) => p.id === item.id);
 
       if (pieceToMove) {
-        // Moving an existing piece
+        // moving an existing piece
         const fromKey = `${pieceToMove.x},${pieceToMove.y}`;
         delete newPieces[fromKey];
         pieceToMove.x = to.x;
         pieceToMove.y = to.y;
         newPieces[`${to.x},${to.y}`] = pieceToMove;
       } else {
-        // Adding a new piece from the selection
+        // placing a new piece from selection
         const newPiece = { ...item, x: to.x, y: to.y, equipment: [] };
         newPieces[`${to.x},${to.y}`] = newPiece;
       }
 
       return newPieces;
-    };
+    });
+
     setSelectedPiece(null);
     setPossibleMoves([]);
     setPossibleAttacks([]);
@@ -105,10 +126,11 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
 
     setHistory([...history, pieces]);
 
-    setPieces(prevPieces => {
+    setPieces((prevPieces) => {
       const newPieces = { ...prevPieces };
-      const targetPiece = Object.values(newPieces).find(p => p.id === piece.id);
+      const targetPiece = Object.values(newPieces).find((p) => p.id === piece.id);
       if (targetPiece) {
+        targetPiece.equipment = targetPiece.equipment || [];
         targetPiece.equipment.push(equipment);
       }
       return newPieces;
@@ -123,9 +145,9 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     onUndo(handleUndo);
-  }, [handleUndo]);
+  }, [onUndo, history, pieces]); // or wrap handleUndo in useCallback
 
   const renderSquare = (i) => {
     const x = i % 8;
@@ -133,8 +155,10 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
     const isEven = (x + y) % 2 === 0;
     const colorClass = isEven ? 'board-square-light' : 'board-square-dark';
     const piece = pieces[`${x},${y}`];
-    const isPossibleMove = possibleMoves.some(move => move.x === x && move.y === y);
-    const isPossibleAttack = possibleAttacks.some(attack => attack.x === x && attack.y === y);
+    const isPossibleMove = possibleMoves.some((move) => move.x === x && move.y === y);
+    const isPossibleAttack = possibleAttacks.some(
+      (attack) => attack.x === x && attack.y === y
+    );
 
     return (
       <Square
@@ -152,5 +176,12 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
       />
     );
   };
+
+  return (
+    <div className="board">
+      {[...Array(64)].map((_, i) => renderSquare(i))}
+    </div>
+  );
+};
 
 export default Board;
