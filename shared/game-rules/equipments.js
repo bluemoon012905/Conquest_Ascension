@@ -1,36 +1,83 @@
 export const equipments = {
   'oct-movement': {
-    name: 'Octagonal Movement',
-    description: 'Allows movement in 8 directions.',
+    name: 'Oct Movement',
+    description: 'Move one square in any of the eight directions per card.',
+    category: 'movement',
+    cost: { a: 3 },
     effect: {
       type: 'movement',
-      value: 'octagonal',
+      pattern: 'octagonal',
+      range: 1,
     },
   },
   'cross-movement': {
     name: 'Cross Movement',
-    description: 'Allows movement in 4 directions (cross shape).',
+    description: 'Move one square horizontally or vertically per card.',
+    category: 'movement',
+    cost: { a: 2 },
     effect: {
       type: 'movement',
-      value: 'cross',
+      pattern: 'orthogonal',
+      range: 1,
     },
   },
-  '+1_attack': {
-    name: '+1 Attack',
-    description: 'Increases attack by 1.',
+  'diagonal-movement': {
+    name: 'Diagonal Movement',
+    description: 'Move one square diagonally per card.',
+    category: 'movement',
+    cost: { a: 2 },
     effect: {
-      type: 'stat',
-      stat: 'attack',
-      value: 1,
+      type: 'movement',
+      pattern: 'diagonal',
+      range: 1,
     },
   },
-  '+1_defense': {
-    name: '+1 Defense',
-    description: 'Increases defense by 1.',
+  'lightswing-down': {
+    name: 'Light Swing Down',
+    description: 'Attack orthogonal squares for moderate damage.',
+    category: 'attack',
+    cost: { b: 1 },
     effect: {
-      type: 'stat',
-      stat: 'defense',
-      value: 1,
+      type: 'attack',
+      pattern: 'orthogonal',
+      damage: {
+        base: 2,
+        dice: '1d4',
+      },
+    },
+  },
+  'hardswing-down': {
+    name: 'Hard Swing Down',
+    description: 'Attack diagonal squares for heavier damage.',
+    category: 'attack',
+    cost: { b: 2 },
+    effect: {
+      type: 'attack',
+      pattern: 'diagonal',
+      damage: {
+        base: 3,
+        dice: '1d6',
+      },
+    },
+  },
+  'light-armor': {
+    name: 'Light Armor',
+    description: 'Adds 1d4 defense when attacked.',
+    category: 'armor',
+    cost: { c: 1 },
+    effect: {
+      type: 'armor',
+      dice: ['1d4'],
+    },
+  },
+  'heavy-armor': {
+    name: 'Heavy Armor',
+    description: 'Adds 1d4+1d6 defense when attacked.',
+    category: 'armor',
+    cost: { c: 2, a: 1 },
+    effect: {
+      type: 'armor',
+      dice: ['1d4', '1d6'],
     },
   },
 };
