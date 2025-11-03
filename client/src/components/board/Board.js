@@ -92,7 +92,7 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
       }
 
       return newPieces;
-    });
+    };
     setSelectedPiece(null);
     setPossibleMoves([]);
     setPossibleAttacks([]);
