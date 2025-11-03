@@ -64,3 +64,15 @@ The next steps are to implement the core gameplay features as described in the `
 -   [x] Remove pieces from the board when their health reaches zero.
 -   [x] Implement the win/loss conditions.
 -   [x] Add a button to return to the main menu or the demo board setup after a game ends.
+
+## Notes
+
+- Setup board view currently shows a black border/rectangle that disappears once the game starts; determine whether this is intentional styling or a layout artifact.
+- Move/capture selection still relies on the browser `window.confirm` prompt; in-game UI modal/list would provide a better experience.
+- Friendly piece stacking works, but overlapping enemy pieces is still treated as a capture/removal even without capture gear.
+
+## TODOs
+
+- Replace the `window.confirm` call used when a square is both a move and capture target with an in-game prompt component that lists the available actions.
+- Update capture interpretation so swing-down cards resolve against the piece's own tile (self-square) rather than the square directly below.
+- Allow enemy units to share a square without auto-removal unless a valid capture action is triggered.

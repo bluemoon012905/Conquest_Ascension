@@ -21,6 +21,14 @@ const PieceCard = ({ type, player }) => {
   }), [type, player]);
 
   const pieceData = pieceDefinitions[type];
+  const formatBudget = (resources) => {
+    const values = {
+      a: resources?.a ?? 0,
+      b: resources?.b ?? 0,
+      c: resources?.c ?? 0,
+    };
+    return `A: ${values.a}  B: ${values.b}  C: ${values.c}`;
+  };
 
   return (
     <div
@@ -42,8 +50,7 @@ const PieceCard = ({ type, player }) => {
       {pieceData && (
         <div style={{ fontSize: '0.85rem', lineHeight: 1.3 }}>
           <div>HP: {pieceData.health}</div>
-          <div>ATK: {pieceData.attack}</div>
-          <div>DEF: {pieceData.defense}</div>
+          <div>Budget: {formatBudget(pieceData.resources)}</div>
         </div>
       )}
     </div>

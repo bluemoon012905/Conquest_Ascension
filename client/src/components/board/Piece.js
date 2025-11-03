@@ -41,8 +41,13 @@ const Piece = ({
 }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.PIECE,
-    item: { id: piece.id, type: piece.type, player: piece.player, source: 'board' },
-    canDrag: () => gamePhase === 'SETUP' || piece.player === currentPlayer,
+    item: {
+      id: piece.id,
+      type: piece.type,
+      player: piece.player,
+      source: 'board',
+    },
+    canDrag: () => gamePhase === 'SETUP',
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -57,8 +62,14 @@ const Piece = ({
   }));
 
   const definition = pieceDefinitions[piece.type];
-  const maxHealth = definition?.health ?? piece.health ?? 10;
+  const maxHealth = piece.maxHealth ?? definition?.health ?? piece.health ?? 10;
+  const currentHealth = piece.health ?? maxHealth;
   const equipmentList = piece.equipment || [];
+
+  const handleClick = (event) => {
+    event.stopPropagation();
+    onPieceClick(piece);
+  };
 
   return (
     <div
@@ -68,12 +79,15 @@ const Piece = ({
         opacity: isDragging ? 0.5 : 1,
       }}
     >
-      <div style={{ width: '100%', paddingBottom: '4px' }}>
-        <HealthBar health={piece.health ?? maxHealth} maxHealth={maxHealth} />
+      <div className="piece-health">
+        <span className="piece-health-text">
+          {currentHealth}/{maxHealth}
+        </span>
+        <HealthBar health={currentHealth} maxHealth={maxHealth} />
       </div>
       <button
         type="button"
-        onClick={() => onPieceClick(piece)}
+        onClick={handleClick}
         className={`piece-button ${piece.player} ${isSelected ? 'selected' : ''}`}
         style={{
           backgroundColor: isOver
@@ -81,6 +95,7 @@ const Piece = ({
             : piece.player === 'blue'
             ? '#1e90ff'
             : '#dc143c',
+          cursor: gamePhase === 'SETUP' ? 'grab' : 'pointer',
         }}
       >
         <span className="piece-label">{piece.type}</span>

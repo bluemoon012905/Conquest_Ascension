@@ -12,11 +12,23 @@ const shapeTokens = {
   armor: '{SHIELD}',
 };
 
+const formatCost = (cost = {}) => {
+  const costs = { a: cost.a ?? 0, b: cost.b ?? 0, c: cost.c ?? 0 };
+  return `Cost → A: ${costs.a}  B: ${costs.b}  C: ${costs.c}`;
+};
+
 const DraggableEquipment = ({ equipment, id }) => {
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: ItemTypes.EQUIPMENT,
-      item: { id, type: 'equipment', name: equipment.name, effect: equipment.effect },
+      item: {
+        id,
+        type: 'equipment',
+        name: equipment.name,
+        effect: equipment.effect,
+        category: equipment.category,
+        cost: equipment.cost,
+      },
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
@@ -41,6 +53,9 @@ const DraggableEquipment = ({ equipment, id }) => {
         {shapeTokens[equipment.category] ?? '[CARD]'} {equipment.name}
       </div>
       <div style={{ fontSize: '0.8rem', color: '#444' }}>{equipment.description}</div>
+      <div style={{ fontSize: '0.75rem', color: '#222', marginTop: '4px' }}>
+        {formatCost(equipment.cost)}
+      </div>
     </div>
   );
 };

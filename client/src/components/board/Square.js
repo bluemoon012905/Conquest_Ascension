@@ -9,14 +9,16 @@ const Square = ({
   y,
   onDrop,
   onDropEquipment,
-  piece,
+  pieces = [],
   colorClass,
   isPossibleMove,
   isPossibleAttack,
   currentPlayer,
   onPieceClick,
   gamePhase,
-  isSelected,
+  isSelectedSquare,
+  selectedPieceId,
+  onSquareClick,
 }) => {
   const [{ isOver }, drop] = useDrop(
     () => ({
@@ -48,19 +50,23 @@ const Square = ({
       className={`board-square ${colorClass}`}
       style={{
         backgroundColor,
-        boxShadow: isSelected ? '0 0 0 4px rgba(255, 215, 0, 0.8) inset' : 'none',
+        boxShadow: isSelectedSquare ? '0 0 0 4px rgba(255, 215, 0, 0.8) inset' : 'none',
       }}
+      onClick={() => onSquareClick(x, y)}
     >
-      {piece && (
-        <Piece
-          piece={piece}
-          onDropEquipment={onDropEquipment}
-          currentPlayer={currentPlayer}
-          onPieceClick={onPieceClick}
-          gamePhase={gamePhase}
-          isSelected={isSelected}
-        />
-      )}
+      <div className="square-occupants">
+        {pieces.map((piece) => (
+          <Piece
+            key={piece.id}
+            piece={piece}
+            onDropEquipment={onDropEquipment}
+            currentPlayer={currentPlayer}
+            onPieceClick={onPieceClick}
+            gamePhase={gamePhase}
+            isSelected={piece.id === selectedPieceId}
+          />
+        ))}
+      </div>
     </div>
   );
 };

@@ -5,6 +5,8 @@ import PieceSelection from '../components/ui/PieceSelection';
 import EquipmentSelection from '../components/ui/EquipmentSelection';
 import PieceRoster from '../components/ui/PieceRoster';
 
+const clonePieces = (state) => JSON.parse(JSON.stringify(state));
+
 function GameView({ setView }) {
   const [gamePhase, setGamePhase] = useState('SETUP');
   const [currentPlayer, setCurrentPlayer] = useState('blue');
@@ -34,7 +36,8 @@ function GameView({ setView }) {
       }
 
       const previousState = prevHistory[prevHistory.length - 1];
-      setPieces(previousState);
+      setPieces(clonePieces(previousState));
+      setSelectedPieceId(null);
       return prevHistory.slice(0, -1);
     });
   };

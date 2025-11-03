@@ -5,6 +5,56 @@ const playerLabels = {
   red: 'Red Army',
 };
 
+const formatResourceString = (piece) => {
+  const remaining = piece.resourcesRemaining || {};
+  const max = piece.maxResources || piece.resources || {};
+  const format = (key) => `${remaining[key] ?? 0}/${max[key] ?? 0}`;
+  return `A: ${format('a')}  B: ${format('b')}  C: ${format('c')}`;
+};
+
+const formatEquipmentSummary = (piece) => {
+  const equipment = piece.equipment || [];
+  if (equipment.length === 0) {
+    return '—';
+  }
+
+  const buckets = equipment.reduce(
+    (acc, item) => {
+      const category = item.category ?? 'other';
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(item);
+      return acc;
+    },
+    { movement: [], attack: [], armor: [], other: [] }
+  );
+
+  const labelMap = {
+    movement: 'Move',
+    attack: 'Capture',
+    armor: 'Armor',
+    other: 'Other',
+  };
+
+  const summarise = (items) => {
+    const counts = items.reduce((acc, item) => {
+      const key = item.name || item.id || 'Equipment';
+      acc[key] = (acc[key] ?? 0) + 1;
+      return acc;
+    }, {});
+
+    return Object.entries(counts)
+      .map(([name, count]) => (count > 1 ? `${name} x${count}` : name))
+      .join(', ');
+  };
+
+  return Object.entries(buckets)
+    .filter(([, items]) => items.length > 0)
+    .map(([category, items]) => `${labelMap[category] ?? category} (${items.length}): ${summarise(items)}`)
+    .join(' | ');
+};
+
 const PieceRosterSection = ({
   player,
   pieces,
@@ -30,6 +80,9 @@ const PieceRosterSection = ({
               Position
             </th>
             <th style={{ borderBottom: '1px solid #ccc', textAlign: 'left', padding: '4px' }}>
+              Resources
+            </th>
+            <th style={{ borderBottom: '1px solid #ccc', textAlign: 'left', padding: '4px' }}>
               Equipment
             </th>
           </tr>
@@ -53,9 +106,10 @@ const PieceRosterSection = ({
                   ({piece.x + 1}, {piece.y + 1})
                 </td>
                 <td style={{ padding: '4px', borderBottom: '1px solid #eee' }}>
-                  {(piece.equipment || []).length > 0
-                    ? piece.equipment.map((eq) => eq.name).join(', ')
-                    : '—'}
+                  {formatResourceString(piece)}
+                </td>
+                <td style={{ padding: '4px', borderBottom: '1px solid #eee' }}>
+                  {formatEquipmentSummary(piece)}
                 </td>
               </tr>
             );
@@ -67,7 +121,9 @@ const PieceRosterSection = ({
 };
 
 const PieceRoster = ({ pieces, selectedPieceId, onSelectPiece }) => {
-  const grouped = pieces.reduce(
+  const sortedPieces = [...pieces].sort((a, b) => a.type.localeCompare(b.type));
+
+  const grouped = sortedPieces.reduce(
     (acc, piece) => {
       acc[piece.player] = acc[piece.player] || [];
       acc[piece.player].push(piece);
