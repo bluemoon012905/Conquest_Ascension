@@ -1,5 +1,7 @@
 
 import React, { useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import MainMenu from './views/MainMenu';
 import LevelSelection from './views/LevelSelection';
 import GameView from './views/GameView';
@@ -20,9 +22,11 @@ function App() {
   };
 
   return (
-    <div>
-      {renderView()}
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <div>
+        {renderView()}
+      </div>
+    </DndProvider>
   );
 }
 

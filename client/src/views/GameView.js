@@ -2,13 +2,20 @@
 import React from 'react';
 import Button from '../components/ui/Button';
 import Board from '../components/board/Board';
+import PieceSelection from '../components/ui/PieceSelection';
+
+import EquipmentSelection from '../components/ui/EquipmentSelection';
 
 function GameView({ setView }) {
   return (
     <div>
       <h1>Game View</h1>
-      <Board />
-      <Button onClick={() => setView('MAIN_MENU')}>Back to Main Menu</Button>
+      <div style={{ display: 'flex' }}>
+        <Board />
+        <PieceSelection />
+        <EquipmentSelection />
+      </div>
+      <Button onClick={() => setView('LEVEL_SELECTION')}>Back to Level Selection</Button>
     </div>
   );
 }

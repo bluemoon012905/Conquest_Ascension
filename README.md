@@ -41,13 +41,13 @@ The next steps are to implement the core gameplay features as described in the `
 
 ### Demo Board
 
--   [ ] Create an 8x8 game board component.
--   [ ] Implement the ability to drag and drop pieces onto the board.
--   [ ] Create a "demo" mode where the user can place pieces for two players (blue and red).
+-   [x] Create an 8x8 game board component.
+-   [x] Implement the ability to drag and drop pieces onto the board.
+-   [x] Create a "demo" mode where the user can place pieces for two players (blue and red).
 
 ### Pieces and Equipment
 
--   [ ] Define the data structures for pieces (Vanguard, Horseman, Shieldman) and equipment (oct-movement, cross-movement, etc.).
+-   [x] Define the data structures for pieces (Vanguard, Horseman, Shieldman) and equipment (oct-movement, cross-movement, etc.).
 -   [ ] Create a UI for displaying and selecting pieces and equipment.
 -   [ ] Implement the logic for equipping items to pieces, including stacking multiple items.
 -   [ ] Create the visual representation of pieces (circles) and equipment (rectangles, hexagons, shields).
