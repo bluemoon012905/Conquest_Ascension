@@ -1,0 +1,8 @@
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 400px; /* Adjust as needed */
+  height: 400px; /* Adjust as needed */
+  border: 1px solid black;
+}
