@@ -2,13 +2,19 @@ import React, { useState, useEffect } from 'react';
 import Square from './Square';
 import './Board.css';
 
-const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
+const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner, gamePhase }) => {
   const [pieces, setPieces] = useState({});
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [possibleMoves, setPossibleMoves] = useState([]);
   const [possibleAttacks, setPossibleAttacks] = useState([]);
 
   const handlePieceClick = (piece) => {
+    if (gamePhase === 'SETUP') {
+      // In setup phase, clicking a piece might allow for its removal or modification
+      // For now, we do nothing.
+      return;
+    }
+
     if (piece.player !== currentPlayer) {
       return;
     }
@@ -32,6 +38,18 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
   };
 
   const handleDrop = (item, to) => {
+    if (gamePhase === 'SETUP') {
+      // In setup phase, we are only placing new pieces
+      setPieces((prevPieces) => {
+        const newPieces = { ...prevPieces };
+        const newPiece = { ...item, x: to.x, y: to.y, equipment: [] };
+        newPieces[`${to.x},${to.y}`] = newPiece;
+        return newPieces;
+      });
+      return;
+    }
+
+    // In playing phase, handle moves and attacks
     if (item.player !== currentPlayer) {
       return;
     }
@@ -91,7 +109,7 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
       return;
     }
 
-    // NON-COMBAT MOVE / PLACE BRANCH
+    // NON-COMBAT MOVE BRANCH
     setPieces((prevPieces) => {
       const newPieces = { ...prevPieces };
 
@@ -105,10 +123,6 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
         pieceToMove.x = to.x;
         pieceToMove.y = to.y;
         newPieces[`${to.x},${to.y}`] = pieceToMove;
-      } else {
-        // placing a new piece from selection
-        const newPiece = { ...item, x: to.x, y: to.y, equipment: [] };
-        newPieces[`${to.x},${to.y}`] = newPiece;
       }
 
       return newPieces;
@@ -120,6 +134,10 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
   };
 
   const handleDropEquipment = (equipment, piece) => {
+    if (gamePhase === 'SETUP') {
+      // Equipment can be dropped in setup phase as well
+    }
+
     if (piece.player !== currentPlayer) {
       return;
     }
@@ -173,6 +191,7 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner }) => {
         onPieceClick={handlePieceClick}
         isPossibleMove={isPossibleMove}
         isPossibleAttack={isPossibleAttack}
+        gamePhase={gamePhase} // Pass gamePhase to Square
       />
     );
   };

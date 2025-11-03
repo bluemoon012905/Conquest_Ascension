@@ -4,7 +4,7 @@ import { ItemTypes } from './Piece'; // Assuming Piece.js exports ItemTypes
 import Piece from './Piece';
 import './Square.css';
 
-const Square = ({ x, y, onDrop, onDropEquipment, piece, colorClass, isPossibleMove, isPossibleAttack, currentPlayer, onPieceClick }) => {
+const Square = ({ x, y, onDrop, onDropEquipment, piece, colorClass, isPossibleMove, isPossibleAttack, currentPlayer, onPieceClick, gamePhase }) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.PIECE,
     drop: (item) => onDrop(item, { x, y }),
@@ -23,7 +23,7 @@ const Square = ({ x, y, onDrop, onDropEquipment, piece, colorClass, isPossibleMo
         backgroundColor,
       }}
     >
-      {piece && <Piece piece={piece} onDropEquipment={onDropEquipment} currentPlayer={currentPlayer} onPieceClick={onPieceClick} />}
+      {piece && <Piece piece={piece} onDropEquipment={onDropEquipment} currentPlayer={currentPlayer} onPieceClick={onPieceClick} gamePhase={gamePhase} />}
     </div>
   );
 };
