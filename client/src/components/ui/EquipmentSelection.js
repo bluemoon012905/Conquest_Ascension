@@ -1,5 +1,5 @@
 import React from 'react';
-import { equipments } from '../../../shared/game-rules/equipments';
+import { equipments } from '../../../../shared/game-rules/equipments';
 import { useDrag } from 'react-dnd';
 
 const ItemTypes = {

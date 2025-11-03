@@ -9,7 +9,7 @@ export const equipments = {
   },
   'cross-movement': {
     name: 'Cross Movement',
-    description: 'Allows movement in 4 directions (cross shape).'
+    description: 'Allows movement in 4 directions (cross shape).',
     effect: {
       type: 'movement',
       value: 'cross',
