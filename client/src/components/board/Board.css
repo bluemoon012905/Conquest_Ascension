@@ -1,8 +1,17 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 480px;
+  height: 480px;
+  border: 1px solid black;
+}
+
 .board-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  width: 400px; /* Adjust as needed */
-  height: 400px; /* Adjust as needed */
+  width: 480px;
+  height: 480px;
   border: 1px solid black;
 }

@@ -14,7 +14,7 @@ const ItemTypes = {
 const Piece = ({ piece, onDropEquipment, currentPlayer, onPieceClick, gamePhase }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.PIECE,
-    item: { id: piece.id, type: piece.type, player: piece.player },
+    item: { id: piece.id, type: piece.type, player: piece.player, source: 'board' },
     canDrag: () => gamePhase === 'SETUP' || piece.player === currentPlayer,
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),

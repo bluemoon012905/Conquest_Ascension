@@ -1,26 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Square from './Square';
 import './Board.css';
+import { pieces as pieceDefinitions } from '../../../../shared/game-rules/pieces';
+
+const BOARD_SIZE = 8;
+
+const cloneBoardState = (state) => JSON.parse(JSON.stringify(state));
 
 const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner, gamePhase }) => {
-  const [pieces, setPieces] = useState({});
-  const [selectedPiece, setSelectedPiece] = useState(null);
+  const [boardPieces, setBoardPieces] = useState({});
+  const [selectedPieceId, setSelectedPieceId] = useState(null);
   const [possibleMoves, setPossibleMoves] = useState([]);
   const [possibleAttacks, setPossibleAttacks] = useState([]);
 
   const handlePieceClick = (piece) => {
     if (gamePhase === 'SETUP') {
-      // In setup phase, clicking a piece might allow for its removal or modification
-      // For now, we do nothing.
       return;
     }
 
     if (piece.player !== currentPlayer) {
       return;
     }
-    setSelectedPiece(piece);
 
-    // Dummy data for possible moves
+    setSelectedPieceId(piece.id);
+
     const moves = [];
     for (let i = 1; i < 3; i++) {
       moves.push({ x: piece.x + i, y: piece.y });
@@ -30,71 +33,89 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner, gamePhas
     }
     setPossibleMoves(moves);
 
-    // Dummy data for possible attacks
     const attacks = [];
     attacks.push({ x: piece.x + 1, y: piece.y + 1 });
     attacks.push({ x: piece.x - 1, y: piece.y - 1 });
     setPossibleAttacks(attacks);
   };
 
+  const placeNewPiece = (item, to) => {
+    const definition = pieceDefinitions[item.type] || {};
+    const uniqueId = `${item.type}-${item.player}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+
+    setBoardPieces((prevPieces) => {
+      const newPieces = { ...prevPieces };
+      newPieces[`${to.x},${to.y}`] = {
+        id: uniqueId,
+        type: item.type,
+        player: item.player,
+        x: to.x,
+        y: to.y,
+        equipment: [],
+        health: definition.health ?? 10,
+      };
+      return newPieces;
+    });
+  };
+
+  const repositionExistingPiece = (item, to) => {
+    setBoardPieces((prevPieces) => {
+      const newPieces = { ...prevPieces };
+      const entry = Object.entries(newPieces).find(([, piece]) => piece.id === item.id);
+
+      if (!entry) {
+        return prevPieces;
+      }
+
+      const [fromKey, piece] = entry;
+      const updatedPiece = { ...piece, x: to.x, y: to.y };
+      delete newPieces[fromKey];
+      newPieces[`${to.x},${to.y}`] = updatedPiece;
+      return newPieces;
+    });
+  };
+
   const handleDrop = (item, to) => {
     if (gamePhase === 'SETUP') {
-      // In setup phase, we are only placing new pieces
-      setPieces((prevPieces) => {
-        const newPieces = { ...prevPieces };
-        const newPiece = { ...item, x: to.x, y: to.y, equipment: [] };
-        newPieces[`${to.x},${to.y}`] = newPiece;
-        return newPieces;
-      });
+      if (item.source === 'board') {
+        repositionExistingPiece(item, to);
+      } else {
+        placeNewPiece(item, to);
+      }
       return;
     }
 
-    // In playing phase, handle moves and attacks
     if (item.player !== currentPlayer) {
       return;
     }
 
-    const isPossibleMove = possibleMoves.some(
-      (move) => move.x === to.x && move.y === to.y
-    );
-    const isPossibleAttack = possibleAttacks.some(
-      (attack) => attack.x === to.x && attack.y === to.y
-    );
+    const isPossibleMove = possibleMoves.some((move) => move.x === to.x && move.y === to.y);
+    const isPossibleAttack = possibleAttacks.some((attack) => attack.x === to.x && attack.y === to.y);
 
-    if (isPossibleMove && isPossibleAttack) {
-      if (window.confirm('Attack?')) {
-        console.log('Attacking!');
-      } else {
-        console.log('Moving!');
-      }
-    } else if (isPossibleAttack) {
-      console.log('Attacking!');
-    } else if (isPossibleMove) {
-      console.log('Moving!');
+    if (!isPossibleMove && !isPossibleAttack) {
+      return;
     }
 
-    // save current board to history
-    setHistory([...history, pieces]);
+    setHistory((prevHistory) => [...prevHistory, cloneBoardState(boardPieces)]);
 
-    const targetPiece = pieces[`${to.x},${to.y}`];
+    const targetPiece = boardPieces[`${to.x},${to.y}`];
 
-    // COMBAT BRANCH
-    if (targetPiece && targetPiece.player !== item.player) {
-      console.log('Combat!');
-      setPieces((prevPieces) => {
+    if (isPossibleAttack && targetPiece && targetPiece.player !== item.player) {
+      setBoardPieces((prevPieces) => {
         const newPieces = { ...prevPieces };
-        const defender = newPieces[`${to.x},${to.y}`];
+        const defenderKey = `${to.x},${to.y}`;
+        const defender = newPieces[defenderKey];
 
         if (defender) {
-          defender.health -= 1;
-          if (defender.health <= 0) {
-            delete newPieces[`${to.x},${to.y}`];
+          const updatedDefender = { ...defender, health: (defender.health ?? 0) - 1 };
+          if (updatedDefender.health <= 0) {
+            delete newPieces[defenderKey];
+          } else {
+            newPieces[defenderKey] = updatedDefender;
           }
         }
 
-        const remainingOpponentPieces = Object.values(newPieces).filter(
-          (p) => p.player !== currentPlayer
-        );
+        const remainingOpponentPieces = Object.values(newPieces).filter((p) => p.player !== currentPlayer);
         if (remainingOpponentPieces.length === 0) {
           setWinner(currentPlayer);
         }
@@ -102,85 +123,86 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner, gamePhas
         return newPieces;
       });
 
-      // after combat we’re done
-      setSelectedPiece(null);
+      setSelectedPieceId(null);
       setPossibleMoves([]);
       setPossibleAttacks([]);
       return;
     }
 
-    // NON-COMBAT MOVE BRANCH
-    setPieces((prevPieces) => {
-      const newPieces = { ...prevPieces };
+    if (isPossibleMove) {
+      setBoardPieces((prevPieces) => {
+        const newPieces = { ...prevPieces };
+        const entry = Object.entries(newPieces).find(([, piece]) => piece.id === item.id);
 
-      // find the piece we’re moving (it should already be on the board)
-      const pieceToMove = Object.values(newPieces).find((p) => p.id === item.id);
+        if (!entry) {
+          return prevPieces;
+        }
 
-      if (pieceToMove) {
-        // moving an existing piece
-        const fromKey = `${pieceToMove.x},${pieceToMove.y}`;
+        const [fromKey, piece] = entry;
+        const updatedPiece = { ...piece, x: to.x, y: to.y };
         delete newPieces[fromKey];
-        pieceToMove.x = to.x;
-        pieceToMove.y = to.y;
-        newPieces[`${to.x},${to.y}`] = pieceToMove;
-      }
+        newPieces[`${to.x},${to.y}`] = updatedPiece;
+        return newPieces;
+      });
+    }
 
-      return newPieces;
-    });
-
-    setSelectedPiece(null);
+    setSelectedPieceId(null);
     setPossibleMoves([]);
     setPossibleAttacks([]);
   };
 
   const handleDropEquipment = (equipment, piece) => {
-    if (gamePhase === 'SETUP') {
-      // Equipment can be dropped in setup phase as well
-    }
-
-    if (piece.player !== currentPlayer) {
+    if (gamePhase !== 'SETUP' && piece.player !== currentPlayer) {
       return;
     }
 
-    setHistory([...history, pieces]);
+    setHistory((prevHistory) => [...prevHistory, cloneBoardState(boardPieces)]);
 
-    setPieces((prevPieces) => {
+    setBoardPieces((prevPieces) => {
       const newPieces = { ...prevPieces };
-      const targetPiece = Object.values(newPieces).find((p) => p.id === piece.id);
-      if (targetPiece) {
-        targetPiece.equipment = targetPiece.equipment || [];
-        targetPiece.equipment.push(equipment);
+      const entry = Object.entries(newPieces).find(([, candidate]) => candidate.id === piece.id);
+
+      if (!entry) {
+        return prevPieces;
       }
+
+      const [key, targetPiece] = entry;
+      const updatedEquipment = [...(targetPiece.equipment || []), equipment];
+      const updatedPiece = { ...targetPiece, equipment: updatedEquipment };
+      newPieces[key] = updatedPiece;
       return newPieces;
     });
   };
 
-  const handleUndo = () => {
-    if (history.length > 0) {
-      const lastState = history[history.length - 1];
-      setPieces(lastState);
-      setHistory(history.slice(0, history.length - 1));
+  const handleUndo = useCallback(() => {
+    if (history.length === 0) {
+      return;
     }
-  };
+
+    const lastState = history[history.length - 1];
+    setBoardPieces(lastState);
+    setHistory(history.slice(0, -1));
+    setSelectedPieceId(null);
+    setPossibleMoves([]);
+    setPossibleAttacks([]);
+  }, [history, setHistory]);
 
   useEffect(() => {
-    onUndo(handleUndo);
-  }, [onUndo, history, pieces]); // or wrap handleUndo in useCallback
+    onUndo(() => handleUndo());
+  }, [onUndo, handleUndo]);
 
-  const renderSquare = (i) => {
-    const x = i % 8;
-    const y = Math.floor(i / 8);
+  const renderSquare = (index) => {
+    const x = index % BOARD_SIZE;
+    const y = Math.floor(index / BOARD_SIZE);
     const isEven = (x + y) % 2 === 0;
     const colorClass = isEven ? 'board-square-light' : 'board-square-dark';
-    const piece = pieces[`${x},${y}`];
+    const piece = boardPieces[`${x},${y}`];
     const isPossibleMove = possibleMoves.some((move) => move.x === x && move.y === y);
-    const isPossibleAttack = possibleAttacks.some(
-      (attack) => attack.x === x && attack.y === y
-    );
+    const isPossibleAttack = possibleAttacks.some((attack) => attack.x === x && attack.y === y);
 
     return (
       <Square
-        key={i}
+        key={index}
         x={x}
         y={y}
         onDrop={handleDrop}
@@ -191,14 +213,14 @@ const Board = ({ currentPlayer, onUndo, history, setHistory, setWinner, gamePhas
         onPieceClick={handlePieceClick}
         isPossibleMove={isPossibleMove}
         isPossibleAttack={isPossibleAttack}
-        gamePhase={gamePhase} // Pass gamePhase to Square
+        gamePhase={gamePhase}
       />
     );
   };
 
   return (
     <div className="board">
-      {[...Array(64)].map((_, i) => renderSquare(i))}
+      {[...Array(BOARD_SIZE * BOARD_SIZE)].map((_, index) => renderSquare(index))}
     </div>
   );
 };
