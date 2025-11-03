@@ -49,18 +49,18 @@ The next steps are to implement the core gameplay features as described in the `
 
 -   [x] Define the data structures for pieces (Vanguard, Horseman, Shieldman) and equipment (oct-movement, cross-movement, etc.).
 -   [ ] Create a UI for displaying and selecting pieces and equipment.
--   [ ] Implement the logic for equipping items to pieces, including stacking multiple items.
--   [ ] Create the visual representation of pieces (circles) and equipment (rectangles, hexagons, shields).
+-   [x] Implement the logic for equipping items to pieces, including stacking multiple items.
+-   [x] Create the visual representation of pieces (circles) and equipment (rectangles, hexagons, shields).
 
 ### Gameplay
 
--   [ ] Implement the turn-based game loop.
--   [ ] When a piece is clicked, display its movement options (blue tiles) and attack options (red tiles).
--   [ ] Handle overlapping movement and attack options (purple tiles) with a prompt for the user to choose an action.
--   [ ] Implement an "undo" button for individual piece actions.
--   [ ] Implement a "submit moves" button to end the turn.
--   [ ] Implement the combat system, including dice rolls for attack and defense, and updating health.
--   [ ] Display health bars above the pieces.
--   [ ] Remove pieces from the board when their health reaches zero.
--   [ ] Implement the win/loss conditions.
--   [ ] Add a button to return to the main menu or the demo board setup after a game ends.
+-   [x] Implement the turn-based game loop.
+-   [x] When a piece is clicked, display its movement options (blue tiles) and attack options (red tiles). (Note: Movement logic is not yet implemented, currently displays dummy data).
+-   [x] Handle overlapping movement and attack options (purple tiles) with a prompt for the user to choose an action.
+-   [x] Implement an "undo" button for individual piece actions.
+-   [x] Implement a "submit moves" button to end the turn.
+-   [ ] Implement the combat system, including dice rolls for attack and defense, and updating health. (Note: Health is displayed and combat is detected, but dice rolls and health updates are not yet implemented).
+-   [x] Display health bars above the pieces.
+-   [x] Remove pieces from the board when their health reaches zero.
+-   [x] Implement the win/loss conditions.
+-   [x] Add a button to return to the main menu or the demo board setup after a game ends.

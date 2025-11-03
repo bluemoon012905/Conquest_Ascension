@@ -4,7 +4,7 @@ import { ItemTypes } from './Piece'; // Assuming Piece.js exports ItemTypes
 import Piece from './Piece';
 import './Square.css';
 
-const Square = ({ x, y, onDrop, piece, colorClass }) => {
+const Square = ({ x, y, onDrop, onDropEquipment, piece, colorClass, isPossibleMove, isPossibleAttack, currentPlayer, onPieceClick }) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.PIECE,
     drop: (item) => onDrop(item, { x, y }),
@@ -13,15 +13,17 @@ const Square = ({ x, y, onDrop, piece, colorClass }) => {
     }),
   }), [x, y, onDrop]);
 
+  const backgroundColor = isPossibleMove && isPossibleAttack ? 'purple' : (isPossibleAttack ? 'red' : (isPossibleMove ? '#87CEEB' : (isOver ? '#c9a37c' : (colorClass === 'board-square-light' ? '#f0d9b5' : '#b58863'))));
+
   return (
     <div
       ref={drop}
       className={`board-square ${colorClass}`}
       style={{
-        backgroundColor: isOver ? '#c9a37c' : (colorClass === 'board-square-light' ? '#f0d9b5' : '#b58863'),
+        backgroundColor,
       }}
     >
-      {piece && <Piece piece={piece} />}
+      {piece && <Piece piece={piece} onDropEquipment={onDropEquipment} currentPlayer={currentPlayer} onPieceClick={onPieceClick} />}
     </div>
   );
 };

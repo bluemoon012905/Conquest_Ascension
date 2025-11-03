@@ -6,10 +6,23 @@ const ItemTypes = {
   EQUIPMENT: 'equipment',
 };
 
+const getEquipmentShape = (equipmentId) => {
+  if (equipmentId.includes('movement')) {
+    return '[M]'; // Movement
+  }
+  if (equipmentId.includes('attack')) {
+    return '[A]'; // Attack
+  }
+  if (equipmentId.includes('defense')) {
+    return '[D]'; // Defense
+  }
+  return '[E]'; // Generic Equipment
+};
+
 const DraggableEquipment = ({ equipment }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.EQUIPMENT,
-    item: { id: equipment.id, type: 'equipment' }, // Add type for drop handling
+    item: { id: equipment.id, type: 'equipment', name: equipment.name }, // Add type for drop handling
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -24,8 +37,11 @@ const DraggableEquipment = ({ equipment }) => {
         padding: '5px',
         border: '1px solid black',
         margin: '5px',
+        display: 'flex',
+        alignItems: 'center',
       }}
     >
+      <div style={{ marginRight: '10px' }}>{getEquipmentShape(equipment.id)}</div>
       {equipment.name}
     </div>
   );

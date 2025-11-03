@@ -1,0 +1,17 @@
+.piece {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: move;
+}
+
+.piece-blue {
+  background-color: blue;
+}
+
+.piece-red {
+  background-color: red;
+}
