@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d docs"
   },
   "repository": {
     "type": "git",
@@ -18,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/bluemoon012905/Conquest_Ascension/issues"
   },
-  "homepage": "https://github.com/bluemoon012905/Conquest_Ascension#readme",
+  "homepage": "https://bluemoon012905.github.io/Conquest_Ascension",
   "dependencies": {
     "react": "^19.2.0",
     "react-dnd": "^16.0.1",
@@ -31,6 +33,8 @@
     "@babel/preset-react": "^7.28.5",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
+    "file-loader": "^6.2.0",
+    "gh-pages": "^6.3.0",
     "html-webpack-plugin": "^5.6.4",
     "style-loader": "^4.0.0",
     "webpack": "^5.102.1",
